@@ -33,7 +33,7 @@
         <div class="container-fluid">
 
           <a class="navbar-brand" href="#">
-            <img src="logo.png" alt="" width="250" height="70" class="d-inline-block align-text-top">
+            <img src="logo.png" alt="" width="150" height="70" class="d-inline-block align-text-top">
             <ul>
               <li><a class="active" href="#">Accueil</a></li>
               <li><a href="#">Map</a></li>
@@ -242,7 +242,7 @@ Ortho2= L.imageOverlay(imageUrl, imageBounds).addTo(map);
     };
 
 // Ajout d'un onglet de controle
-ctlLayer= L.control.layers(baselayers,overlays,{collapsed : false}).addTo(map);
+ctlLayer= L.control.layers(baselayers,overlays).addTo(map);
 // Ajout de l'echelle
 ctlEchel= L.control.scale().addTo(map);
 
