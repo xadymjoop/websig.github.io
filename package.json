@@ -1,0 +1,38 @@
+{
+	"module": "src/leaflet.imageoverlay.arrugator.mjs",
+	"browser": "dist/leaflet.imageoverlay.arrugator.js",
+	"devDependencies": {
+		"@rollup/plugin-buble": "^0.21.3",
+		"@rollup/plugin-node-resolve": "^11.2.0",
+		"arrugator": "^1.0.1",
+		"glii": "^0.0.0-alpha.5",
+		"rollup": "^2.39.0",
+		"rollup-plugin-cleanup": "^3.2.1",
+		"tinyqueue": "^2.0.3"
+	},
+	"scripts": {
+		"lint": "prettier .",
+		"lintfix": "prettier . --write",
+		"rollup": "rollup -c rollup.config.js",
+		"prepublish": "rollup -c rollup.config.js"
+	},
+	"author": "Iván Sánchez Ortega <ivan@sanchezortega.es>",
+	"prettier": {
+		"printWidth": 100,
+		"tabWidth": 4,
+		"useTabs": true,
+		"trailingComma": "es5",
+		"arrowParens": "always"
+	},
+	"name": "leaflet.imageoverlay.arrugator",
+	"version": "1.0.0",
+	"description": "Display warped reprojected image overlays on Leaflet maps",
+	"main": "dist/leaflet.imageoverlay.arrugator.js",
+	"keywords": [
+		"leaflet",
+		"raster",
+		"reprojection",
+		"webgl"
+	],
+	"license": "GPL-3.0"
+}
