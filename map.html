@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!-- Created By Khadim DIOP -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+      <title>SIG-WEB</title>
+      <link rel="stylesheet" href="style.css">
+      <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+      <link rel="stylesheet" href="Leaflet/dist/leaflet.css" />
+
+      <script src="Leaflet/dist/leaflet-src.js"></script>
+      <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+      <script src="catiline.js"></script>
+      <script src="leaflet.shpfile.js"></script>
+      <script src="https://unpkg.com/chroma-js"></script>
+      <script src="leaflet/shp/dist/shp.js"></script>
+      <script src="leaflet/leaflet-shpfile/leaflet.shpfile.js"></script>
+
+   </head>
+
+
+   <body>
+
+     <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="https://www.sahelgeomatique.com/">
+            <img src="Logo.png" alt="" width="150" height="60"  class="d-inline-block align-text-top">
+            <ul>
+              <li><a class="active" href="map.html">Map</a></li>
+              <li><a href="index.html">Espace login</a></li>
+            </ul>
+          </a>
+        </div>
+        <div class="container-fluid">
+          <div class="row">
+            <div id="map" style="width:100%; height:885px;"></div>
+
+          </div>
+
+        </div>
+      </nav>
+
+
+
+      <script>
+
+
+
+      //****** Initialiser la carte*******
+    var map = new L.Map("map", {
+      center: new L.LatLng(14.70, -17.24),
+      zoom: 12,
+      maxZoom: 18
+
+
+    });
+//**********Configuration des base map*****************
+    // baseMaps
+ var baselayers = {
+World_Topo_Map:L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'),
+World_Imagery: L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services//World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+DBcarto: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'),
+openstreetmap:  L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png')};baselayers.World_Imagery.addTo(map);
+
+
+
+
+//*************************Leve 29 Decembre 2021***************************
+//*************************************************************************
+// ******* Tas Levée du 29 12 2021 *********
+    var limiteTas = new L.Shapefile('tas.zip', {
+          onEachFeature: function(feature, layer) {
+
+              layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                return k + ": " + feature.properties[k];
+              }).join("<br />"), {
+                maxHeight: 200
+              });
+
+          }  ,
+            style:{
+            fillOpacity:0,
+            color: 'black',
+          }
+
+        });
+        limiteTas.addTo(map);
+        limiteTas.once("data:loaded", function() {
+          console.log("finished loaded shapefile");
+        });
+
+
+    //******* Courbe de niveau Levée du 29 12 2021**********
+        var courbeNiveau = new L.Shapefile('CN.zip', {
+    			onEachFeature: function(feature, layer) {
+
+            layer.bindPopup('<b>Courbe de niveau</b>'+ feature.properties)
+
+    			}
+          ,
+
+            style:{
+            fillOpacity:0,
+            color: 'red',
+            weight: 0.5,
+        }
+
+    		});
+    		courbeNiveau.addTo(map);
+    		courbeNiveau.once("data:loaded", function() {
+    			console.log("finished loaded shapefile");
+    		});
+
+ // Limite de Soccocim
+  var soccocim = new L.Shapefile('limite.zip', {
+
+      style:{
+      fillOpacity:0,
+      color: 'black',
+  }
+
+  });
+  soccocim.addTo(map);
+  soccocim.once("data:loaded", function() {
+    console.log("finished loaded shapefile");
+  });
+
+//***************INSERTION DES ORTHOPHOTO***********
+// ORTHOPHOTO DATE INCONNUE
+var imageUrl = 'Ortho3.png';
+       var imageBounds = [
+
+       [14.713269,-17.240199],
+       [14.711767,-17.240182],
+       [14.713290,-17.238511],
+       [14.711785,-17.238489]];
+
+Ortho3= L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+// Orthophoto leve vol3 31 01 2021
+var imageUrl = 'Ortho1.png';
+       var imageBounds = [
+
+        [14.704722,-17.247151],
+        [14.702322,-17.243774],
+        [14.702290,-17.247126],
+        [14.704755,-17.243799]];
+
+Ortho1= L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+// Orthophoto leve vol3 31 01 2021
+var imageUrl = 'Ortho2.png';
+       var imageBounds = [
+
+        [14.706225,-17.245256],
+        [14.706239,-17.243774],
+        [14.704800,-17.245242],
+        [14.704814,-17.243762]];
+
+Ortho2= L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+
+
+////////////////LEVE 31 01 2022///////////////////////////////
+//************************************************************
+
+// Courbe de niveau 31.01.2022
+
+    var Cn310122 = new L.Shapefile('CN.31.01.22.zip', {
+          onEachFeature: function(feature, layer) {
+
+              layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                return k + ": " + feature.properties[k];
+              }).join("<br />"), {
+                maxHeight: 200
+              });
+
+          }  ,
+          style:{
+          fillOpacity:0,
+          color: 'yellow',
+          weight: 0.5,
+      }
+
+        });
+        Cn310122.addTo(map);
+        Cn310122.once("data:loaded", function() {
+          console.log("finished loaded shapefile");
+        });
+
+
+// Tas 31.01.2022
+   var Tas310122 = new L.Shapefile('Tas.31.01.22.zip', {
+      onEachFeature: function(feature, layer) {
+
+          layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+            return k + ": " + feature.properties[k];
+          }).join("<br />"), {
+            maxHeight: 200
+          });
+
+      }  ,
+      style:{
+      fillOpacity:0,
+      color: 'green',
+  }
+
+
+    });
+    Tas310122.addTo(map);
+    Tas310122.once("data:loaded", function() {
+      console.log("finished loaded shapefile");
+    });
+
+
+//************Configuration des couches de controle*************
+
+    var overlays = {
+       "Ortho1": Ortho1,
+       "Ortho2": Ortho2,
+       "Ortho3": Ortho3,
+       "Sococim": soccocim,
+        "Courbe de niveau 29.dec.21": courbeNiveau,
+        "Tas 29.dec.21": limiteTas,
+        "Courbe de niveau 31.jan.22": Cn310122,
+        "Tas 31.jan.22": Tas310122
+
+    };
+
+// Ajout d'un onglet de controle
+ctlLayer= L.control.layers(baselayers,overlays).addTo(map);
+// Ajout de l'echelle
+ctlEchel= L.control.scale().addTo(map);
+
+
+      </script>
+   </body>
+</html>
